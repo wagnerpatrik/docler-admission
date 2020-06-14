@@ -1,10 +1,21 @@
 let userName;
-const chatWindow = document.querySelector('#conversation');
-const userNameSpan = document.querySelector('#user-name');
-const userNameSpanWrapper = document.querySelector('#user-name-wrapper');
-const userNameInput = document.querySelector('#user-name-input');
-const userNameInputWrapper = document.querySelector('.input-container');
-const userMessageInput = document.querySelector('#message-input');
+
+const [
+  chatWindow,
+  userNameSpan,
+  userNameSpanWrapper,
+  userNameInput,
+  userMessageInput,
+  userNameInputWrapper,
+] = (() =>
+  [
+    '#conversation',
+    '#user-name',
+    '#user-name-wrapper',
+    '#user-name-input',
+    '#message-input',
+    '.input-container',
+  ].map((selector) => document.querySelector(selector)))();
 
 const socket = (() => {
   const WS_URL = 'http://35.157.80.184:8080/';
@@ -57,8 +68,7 @@ const { saveUserName, toggleUserNameSources } = (() => {
 
     userName = uName;
     window.localStorage.setItem(LS_USER_NAME_KEY, userName);
-    userNameInput.value = userName;
-    userNameSpan.innerHTML = `${userName}`;
+    userNameInput.value = userNameSpan.innerHTML = userName;
   };
 
   (() => {
@@ -69,7 +79,7 @@ const { saveUserName, toggleUserNameSources } = (() => {
   return { saveUserName, toggleUserNameSources };
 })();
 
-const { appendBotMessage, appendUserMessage, handleUserInput } = (() => {
+const { handleBotResponse, handleUserInput } = (() => {
   const compose = (...fns) => (initalValue) => fns.reduceRight((g, f) => f(g), initalValue);
 
   const createUserMessage = (data) => createMessageNode('user')(data);
@@ -78,21 +88,21 @@ const { appendBotMessage, appendUserMessage, handleUserInput } = (() => {
 
   const appendMessage = (node) => node && chatWindow.append(node);
 
-  const appendBotMessage = compose(appendMessage, createBotMessage);
+  const handleBotResponse = compose(appendMessage, createBotMessage);
   const appendUserMessage = compose(appendMessage, createUserMessage);
 
   const handleUserInput = ({ target: { value: message } }) => {
     const payload = { message, user: userName };
-    socket.emit('message', payload);
+    socket.send(payload)
     appendUserMessage(payload);
     userMessageInput.value = '';
   };
 
-  return { appendBotMessage, appendUserMessage, handleUserInput };
+  return { handleBotResponse, handleUserInput };
 })();
 
 window.onload = () => {
-  socket.on('message', appendBotMessage);
+  socket.on('message', handleBotResponse);
   userMessageInput.addEventListener('change', handleUserInput);
   userNameSpanWrapper.addEventListener('click', toggleUserNameSources);
   userNameInput.addEventListener(
