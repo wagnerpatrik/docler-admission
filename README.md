@@ -1,10 +1,10 @@
 # Chatter
 
-Dockler admission application, built with [Socket.io-Client](https://socket.io/) version: 2.2.0.
+Dockler admission application, built with [Socket.io-Client](https://socket.io/) v: 2.2.0.
 
-## Running
+## Running the app
 
-For first run: cd to folder and run ```npm/yarn install```
+For first run: cd/navigate to project folder and run ```npm/yarn install```
 
 Then: run ```npx serve``` and navigate to: http://localhost:5000 in your browser or just open the chatter.html file.
 

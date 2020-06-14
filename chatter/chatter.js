@@ -1,5 +1,8 @@
-let userName;
+import { NODE_SELECTORS, WS_URL, LS_USER_NAME_KEY, HIDDEN_CLASS } from '../shared/constants.js';
+import { compose, appendMessage, toggleClass, scrollToBottom } from '../shared/helpers.js';
 
+let userName;
+const socket = io(WS_URL);
 const [
   chatWindow,
   userNameSpan,
@@ -7,24 +10,9 @@ const [
   userNameInput,
   userMessageInput,
   userNameInputWrapper,
-] = (() =>
-  [
-    '#conversation',
-    '#user-name',
-    '#user-name-wrapper',
-    '#user-name-input',
-    '#message-input',
-    '.input-container',
-  ].map((selector) => document.querySelector(selector)))();
-
-const socket = (() => {
-  const WS_URL = 'http://35.157.80.184:8080/';
-  return io(WS_URL);
-})();
+] = NODE_SELECTORS.map((selector) => document.querySelector(selector));
 
 const createMessageNode = (() => {
-  const scrollBottom = () => (chatWindow.scrollTop = chatWindow.scrollHeight);
-
   const createSenderNode = (uName, parent) => {
     let userSpan = document.createElement('span');
     userSpan.className = 'sender';
@@ -43,22 +31,15 @@ const createMessageNode = (() => {
     messageSpan.innerText = message;
     messageElem.append(messageSpan);
 
-    setTimeout(scrollBottom, 0);
+    setTimeout(scrollToBottom, 0, chatWindow);
     return messageElem;
   };
 })();
 
 const { saveUserName, toggleUserNameSources } = (() => {
-  const HIDDEN_CLASS = 'hidden';
-  const LS_USER_NAME_KEY = 'userName';
-
-  const toggleUserNameSources = () => {
-    let wrapperA = userNameInputWrapper.classList;
-    let wrapperB = userNameSpanWrapper.classList;
-
-    wrapperA[[...wrapperA].includes(HIDDEN_CLASS) ? 'remove' : 'add'](HIDDEN_CLASS);
-    wrapperB[[...wrapperB].includes(HIDDEN_CLASS) ? 'remove' : 'add'](HIDDEN_CLASS);
-  };
+  const toggleUserNameSources = () =>
+    [userNameInputWrapper.classList, userNameSpanWrapper.classList].forEach(
+      (wrapper) => toggleClass(wrapper, HIDDEN_CLASS));
 
   const saveUserName = (data) => {
     const { uName } = typeof data === 'object' ? (toggleUserNameSources(), data) : { uName: data };
@@ -78,20 +59,16 @@ const { saveUserName, toggleUserNameSources } = (() => {
 })();
 
 const { handleBotResponse, handleUserInput } = (() => {
-  const compose = (...fns) => (initalValue) => fns.reduceRight((g, f) => f(g), initalValue);
-
   const createUserMessage = (data) => createMessageNode('user')(data);
   const createBotMessage = ({ user, message }) =>
     user !== userName && createMessageNode('bot')({ user, message });
 
-  const appendMessage = (node) => node && chatWindow.append(node);
-
-  const handleBotResponse = compose(appendMessage, createBotMessage);
-  const appendUserMessage = compose(appendMessage, createUserMessage);
+  const handleBotResponse = compose(appendMessage(chatWindow), createBotMessage);
+  const appendUserMessage = compose(appendMessage(chatWindow), createUserMessage);
 
   const handleUserInput = ({ target: { value: message } }) => {
     const payload = { message, user: userName };
-    socket.send(payload)
+    socket.send(payload);
     appendUserMessage(payload);
     userMessageInput.value = '';
   };
