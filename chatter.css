@@ -1,0 +1,156 @@
+* {
+  font-family: 'Times New Roman', Times, serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#main {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#chat {
+  width: 60vw;
+  min-width: 280px;
+  max-width: 650px;
+  height: 60vh;
+  min-height: 400px;
+  max-height: 550px;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    0px 9px 6px -9px rgba(116, 113, 113, 0.4),
+    1px 2px 15px 3px rgba(116, 113, 113, 0.4),
+    0px 9px 46px 8px rgba(116, 113, 113, 0.4);
+}
+
+#conversation {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+  padding-right: 15px;
+  flex-direction: column;
+}
+
+.message {
+  margin-bottom: 10px;
+  perspective: 1000px;
+  animation: fadeIn .5s;
+  backface-visibility: hidden;
+}
+
+.sender {
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.message.bot {
+  margin-right: 12%;
+  align-self: flex-start;
+}
+
+.message.user {
+  margin-left: 12%;
+  align-self: flex-end;
+}
+
+.text {
+  font-size: 1rem;
+}
+
+#actions {
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+#user-name-wrapper {
+  width: 16%;
+  min-width: 50px;
+  max-width: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #303030;
+}
+
+#user-name-wrapper span {
+  padding: 0 5px;
+  max-width: 60px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: .8rem;
+}
+
+.input-container {
+  width: 50%;
+  padding: 1% 2%;
+  border: 1px solid #303030;
+}
+
+.input-container.user-name-input {
+  width: 15%;
+}
+
+input {
+  width: 100%;
+  border: none;
+  outline: none;
+  cursor: default;
+  font-size: .8rem;
+  background-color: transparent;
+}
+
+::placeholder {
+  font-size: .8rem;
+}
+
+#send-message-btn {
+  width: 10%;
+  min-width: 50px;
+  max-width: 85px;
+  min-height: 15px;
+  outline: none;
+  padding: 0 1.5%;
+  cursor: inherit;
+  font-size: .8rem;
+  padding-bottom: 0;
+  background-color: #fff;
+  border: 1px solid black;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media only screen and (max-width: 765px) {
+  html {
+    font-size: 14px;
+  }
+
+  ::placeholder {
+    font-size: .65rem;
+  }
+}
