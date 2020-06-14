@@ -25,14 +25,14 @@ const socket = (() => {
 const createMessageNode = (() => {
   const scrollBottom = () => (chatWindow.scrollTop = chatWindow.scrollHeight);
 
-  const createSenderNode = (name, div) => {
+  const createSenderNode = (uName, parent) => {
     let userSpan = document.createElement('span');
     userSpan.className = 'sender';
-    userSpan.innerText = `${name}: `;
-    div.append(userSpan);
+    userSpan.innerText = `${uName}: `;
+    parent.append(userSpan);
   };
 
-  const createMessageNode = (party) => ({ user, message }) => {
+  return (party) => ({ user, message }) => {
     let messageElem = document.createElement('div');
     messageElem.className = `message ${party}`;
 
@@ -46,20 +46,18 @@ const createMessageNode = (() => {
     setTimeout(scrollBottom, 0);
     return messageElem;
   };
-
-  return createMessageNode;
 })();
 
 const { saveUserName, toggleUserNameSources } = (() => {
+  const HIDDEN_CLASS = 'hidden';
   const LS_USER_NAME_KEY = 'userName';
 
   const toggleUserNameSources = () => {
-    const hiddenClass = 'hidden';
-    let inputClass = userNameInputWrapper.classList;
-    let userNameClass = userNameSpanWrapper.classList;
+    let wrapperA = userNameInputWrapper.classList;
+    let wrapperB = userNameSpanWrapper.classList;
 
-    inputClass[[...inputClass].includes(hiddenClass) ? 'remove' : 'add'](hiddenClass);
-    userNameClass[[...userNameClass].includes(hiddenClass) ? 'remove' : 'add'](hiddenClass);
+    wrapperA[[...wrapperA].includes(HIDDEN_CLASS) ? 'remove' : 'add'](HIDDEN_CLASS);
+    wrapperB[[...wrapperB].includes(HIDDEN_CLASS) ? 'remove' : 'add'](HIDDEN_CLASS);
   };
 
   const saveUserName = (data) => {
