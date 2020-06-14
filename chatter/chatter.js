@@ -82,9 +82,7 @@ const { appendBotMessage, appendUserMessage, handleUserInput } = (() => {
   const appendUserMessage = compose(appendMessage, createUserMessage);
 
   const handleUserInput = ({ target: { value: message } }) => {
-    console.log(message);
     const payload = { message, user: userName };
-
     socket.emit('message', payload);
     appendUserMessage(payload);
     userMessageInput.value = '';
