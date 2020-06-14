@@ -18,6 +18,14 @@ body {
   padding: 0;
 }
 
+::placeholder {
+  font-size: .8rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
 #main {
   width: 100vw;
   min-height: 100vh;
@@ -60,11 +68,6 @@ body {
   backface-visibility: hidden;
 }
 
-.sender {
-  font-size: .7rem;
-  font-weight: 600;
-}
-
 .message.bot {
   margin-right: 12%;
   align-self: flex-start;
@@ -75,13 +78,17 @@ body {
   align-self: flex-end;
 }
 
+.sender {
+  font-size: .7rem;
+  font-weight: 600;
+}
+
 .text {
   font-size: 1rem;
 }
 
 #actions {
   display: flex;
-  cursor: pointer;
   justify-content: space-between;
 }
 
@@ -89,6 +96,7 @@ body {
   width: 16%;
   min-width: 50px;
   max-width: 85px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,10 +106,10 @@ body {
 #user-name-wrapper span {
   padding: 0 5px;
   max-width: 60px;
+  font-size: .8rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: .8rem;
 }
 
 .input-container {
@@ -123,10 +131,6 @@ input {
   background-color: transparent;
 }
 
-::placeholder {
-  font-size: .8rem;
-}
-
 #send-message-btn {
   width: 10%;
   min-width: 50px;
@@ -134,23 +138,19 @@ input {
   min-height: 15px;
   outline: none;
   padding: 0 1.5%;
-  cursor: inherit;
+  cursor: pointer;
   font-size: .8rem;
   padding-bottom: 0;
   background-color: #fff;
   border: 1px solid black;
 }
 
-.hidden {
-  display: none !important;
-}
-
 @media only screen and (max-width: 765px) {
   html {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   ::placeholder {
-    font-size: .65rem;
+    font-size: .55rem;
   }
 }
