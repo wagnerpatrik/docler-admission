@@ -85,3 +85,20 @@ window.onload = () => {
     ({ key }) => key === 'Enter' && saveUserName({ uName: userNameInput.value }),
   );
 };
+
+
+
+/* Could've implemented it with mediator pattern however I like the solution above better */
+function User(name) {
+  this.name = name;
+  this.chatroom = null;
+}
+User.prototype.send = function(message, reciever) {}
+User.prototype.receive = function(message, sender) {}
+
+function Room() {
+  this.users = {};
+}
+Room.prototype.registerUser = function(user) {}
+Room.prototype.send = function({ message, sender, reciever }) {}
+Room.prototype.broadcast = function(message, sender) {}
