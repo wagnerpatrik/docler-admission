@@ -6,7 +6,7 @@ Dockler admission application, built with [Socket.io-Client](https://socket.io/)
 
 For first run: cd/navigate to project folder and run ```npm/yarn install```
 
-Then: run ```npx serve``` and navigate to: http://localhost:5000 in your browser or just open the chatter.html file.
+Then: run ```npx serve``` and navigate to: http://localhost:5000 in your browser.
 
 ## Running the app without npm/yarn
 Without basic dev server import/export functionality won't work, so please checkout commit #3b02416 and then
