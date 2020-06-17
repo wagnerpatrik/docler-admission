@@ -44,8 +44,8 @@ const createMessageNode = (() => {
 
 const { saveUserName, toggleUserNameSources } = (() => {
   const toggleUserNameSources = () =>
-    [userNameInputWrapper.classList, userNameSpanWrapper.classList].forEach((wrapper) =>
-      toggleClass(wrapper, HIDDEN_CLASS),
+    [userNameInputWrapper, userNameSpanWrapper].forEach(({ classList }) =>
+      toggleClass(classList, HIDDEN_CLASS),
     );
 
   const saveUserName = (data) => {
