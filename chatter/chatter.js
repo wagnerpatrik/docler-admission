@@ -34,7 +34,7 @@ const createMessageNode = (() => {
       const senderNode = createElement('span', 'sender', `${user}: `);
       appendMessage(messageElem)(senderNode);
     }
-    const senderTextNode = createElement('span', `text ${party}`, message);
+    const senderTextNode = createElement('span', `text ${party}`, sanitizer(message));
     appendMessage(messageElem)(senderTextNode);
 
     setTimeout(scrollToBottom, 0, chatWindow);
@@ -72,13 +72,13 @@ const { saveUserName, toggleUserNameSources } = (() => {
 const { handleBotResponse, handleUserInput } = (() => {
   const createUserMessage = (data) => createMessageNode('user')(data);
   const createBotMessage = ({ user, message }) =>
-    user !== userName && createMessageNode('bot')({ user, message: sanitizer(message) });
+    user !== userName && createMessageNode('bot')({ user, message });
 
   const handleBotResponse = compose(appendMessage(chatWindow), createBotMessage);
   const appendUserMessage = compose(appendMessage(chatWindow), createUserMessage);
 
   const handleUserInput = ({ target: { value: message } }) => {
-    const payload = { message: sanitizer(message), user: userName };
+    const payload = { message, user: userName };
     socket.send(payload);
     appendUserMessage(payload);
     userMessageInput.value = '';
