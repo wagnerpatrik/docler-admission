@@ -19,23 +19,23 @@ const [
 ] = NODE_SELECTORS.map((selector) => document.querySelector(selector));
 
 const createMessageNode = (() => {
-  const createSenderNode = (uName, parent) => {
-    let userSpan = document.createElement('span');
-    userSpan.className = 'sender';
-    userSpan.innerText = `${uName}: `;
-    appendMessage(parent)(userSpan)
-  };
+  const createElement = (type, className, text) => {
+    let element = document.createElement(type);
+    className && (element.className = className);
+    text && (element.innerText = text);
+
+    return element;
+  }
 
   return (party) => ({ user, message }) => {
-    let messageElem = document.createElement('div');
-    messageElem.className = `message ${party}`;
+    const messageElem = createElement('div', `message ${party}`);
 
-    party === 'bot' && createSenderNode(user, messageElem);
-
-    let messageSpan = document.createElement('span');
-    messageSpan.className = `text ${party}`;
-    messageSpan.innerText = message;
-    appendMessage(messageElem)(messageSpan);
+    if (party === 'bot') {
+      const senderNode = createElement('span', 'sender', `${user}: `);
+      appendMessage(messageElem)(senderNode);
+    }
+    const senderTextNode = createElement('span', `text ${party}`, message);
+    appendMessage(messageElem)(senderTextNode);
 
     setTimeout(scrollToBottom, 0, chatWindow);
     return messageElem;
