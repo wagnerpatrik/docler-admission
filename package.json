@@ -16,7 +16,5 @@
     "url": "https://github.com/wagnerpatrik/docler-chatter/issues"
   },
   "homepage": "https://github.com/wagnerpatrik/docler-chatter#readme",
-  "dependencies": {
-    "socket.io-client": "^2.2.0"
-  }
+  "dependencies": {}
 }
