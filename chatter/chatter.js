@@ -1,5 +1,11 @@
 import { NODE_SELECTORS, WS_URL, LS_USER_NAME_KEY, HIDDEN_CLASS } from '../shared/constants.js';
-import { compose, appendMessage, toggleClass, scrollToBottom } from '../shared/helpers.js';
+import {
+  compose,
+  appendMessage,
+  toggleClass,
+  scrollToBottom,
+  sanitizer,
+} from '../shared/helpers.js';
 
 let userName;
 const socket = io(WS_URL);
@@ -17,7 +23,7 @@ const createMessageNode = (() => {
     let userSpan = document.createElement('span');
     userSpan.className = 'sender';
     userSpan.innerText = `${uName}: `;
-    parent.append(userSpan);
+    appendMessage(parent)(userSpan)
   };
 
   return (party) => ({ user, message }) => {
@@ -29,7 +35,7 @@ const createMessageNode = (() => {
     let messageSpan = document.createElement('span');
     messageSpan.className = `text ${party}`;
     messageSpan.innerText = message;
-    messageElem.append(messageSpan);
+    appendMessage(messageElem)(messageSpan);
 
     setTimeout(scrollToBottom, 0, chatWindow);
     return messageElem;
@@ -38,11 +44,15 @@ const createMessageNode = (() => {
 
 const { saveUserName, toggleUserNameSources } = (() => {
   const toggleUserNameSources = () =>
-    [userNameInputWrapper.classList, userNameSpanWrapper.classList].forEach(
-      (wrapper) => toggleClass(wrapper, HIDDEN_CLASS));
+    [userNameInputWrapper.classList, userNameSpanWrapper.classList].forEach((wrapper) =>
+      toggleClass(wrapper, HIDDEN_CLASS),
+    );
 
   const saveUserName = (data) => {
-    const { uName } = typeof data === 'object' ? (toggleUserNameSources(), data) : { uName: data };
+    const { uName } = typeof data === 'object'
+      ? (toggleUserNameSources(), data)
+      : { uName: data };
+
     if (!uName) return;
 
     userName = uName;
@@ -51,7 +61,8 @@ const { saveUserName, toggleUserNameSources } = (() => {
   };
 
   (() => {
-    const userName = window.localStorage.getItem(LS_USER_NAME_KEY) || userNameInput.value;
+    const userName =
+      window.localStorage.getItem(LS_USER_NAME_KEY) || userNameInput.value;
     userName ? saveUserName(userName) : toggleUserNameSources();
   })();
 
@@ -61,13 +72,13 @@ const { saveUserName, toggleUserNameSources } = (() => {
 const { handleBotResponse, handleUserInput } = (() => {
   const createUserMessage = (data) => createMessageNode('user')(data);
   const createBotMessage = ({ user, message }) =>
-    user !== userName && createMessageNode('bot')({ user, message });
+    user !== userName && createMessageNode('bot')({ user, message: sanitizer(message) });
 
   const handleBotResponse = compose(appendMessage(chatWindow), createBotMessage);
   const appendUserMessage = compose(appendMessage(chatWindow), createUserMessage);
 
   const handleUserInput = ({ target: { value: message } }) => {
-    const payload = { message, user: userName };
+    const payload = { message: sanitizer(message), user: userName };
     socket.send(payload);
     appendUserMessage(payload);
     userMessageInput.value = '';
@@ -86,19 +97,20 @@ window.onload = () => {
   );
 };
 
-
-
-/* Could've implemented it with mediator pattern however I like the solution above better */
+/*
+  Could've implemented it with mediator pattern,
+  however if we arent actually connecting ppl, it maskes no sense.
+*/
 function User(name) {
   this.name = name;
-  this.chatroom = null;
+  this.room = null;
 }
-User.prototype.send = function(message, reciever) {}
-User.prototype.receive = function(message, sender) {}
+User.prototype.send = function (message, reciever) {};
+User.prototype.receive = function (message, sender) {};
 
 function Room() {
   this.users = {};
 }
-Room.prototype.registerUser = function(user) {}
-Room.prototype.send = function({ message, sender, reciever }) {}
-Room.prototype.broadcast = function(message, sender) {}
+Room.prototype.registerUser = function (user) {};
+Room.prototype.send = function ({ message, sender, reciever }) {};
+Room.prototype.broadcast = function (message, sender) {};

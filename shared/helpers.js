@@ -1,8 +1,8 @@
-const compose = (...fns) => (initalValue) =>
-  fns.reduceRight((g, f) => f(g), initalValue);
+import { HARMFUL_CHARACTERS_RE, HARMFUL_CHARACTERS_MAP } from './constants.js';
 
-const appendMessage = (parent) => (node) =>
-  node && parent.append(node);
+const compose = (...fns) => (initalValue) => fns.reduceRight((g, f) => f(g), initalValue);
+
+const appendMessage = (parent) => (node) => node && parent.append(node);
 
 const toggleClass = (node, cssClass) =>
   node[[...node].includes(cssClass) ? 'remove' : 'add'](cssClass);
@@ -10,4 +10,8 @@ const toggleClass = (node, cssClass) =>
 const scrollToBottom = (scrolledElement) =>
   (scrolledElement.scrollTop = scrolledElement.scrollHeight);
 
-export { compose, appendMessage, toggleClass, scrollToBottom };
+const sanitizer = (string) =>
+  string.replace(HARMFUL_CHARACTERS_RE, (match) => HARMFUL_CHARACTERS_MAP[match]);
+
+
+export { compose, appendMessage, toggleClass, scrollToBottom, sanitizer };

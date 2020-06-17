@@ -9,5 +9,22 @@ const NODE_SELECTORS = [
   '#message-input',
   '.input-container',
 ];
+const HARMFUL_CHARACTERS_MAP = {
+  '`': '&grave;',
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#x27;',
+  '/': '&#x2F;',
+};
+const HARMFUL_CHARACTERS_RE = /[`&<>"'/]/gi;
 
-export { WS_URL, HIDDEN_CLASS, LS_USER_NAME_KEY, NODE_SELECTORS };
+export {
+  WS_URL,
+  HIDDEN_CLASS,
+  LS_USER_NAME_KEY,
+  NODE_SELECTORS,
+  HARMFUL_CHARACTERS_MAP,
+  HARMFUL_CHARACTERS_RE,
+};
